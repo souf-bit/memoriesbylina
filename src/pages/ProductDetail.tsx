@@ -3,19 +3,37 @@ import { useParams, Link } from 'react-router-dom';
 import { ArrowLeft, ShoppingBag, Check } from 'lucide-react';
 import { useI18n } from '@/lib/i18n';
 import { useCart } from '@/lib/cart';
-import { products } from '@/lib/products';
+import { useProduct } from '@/hooks/useProducts';
 import { Button } from '@/components/ui/button';
+import { Skeleton } from '@/components/ui/skeleton';
 import { motion } from 'framer-motion';
 
 const ProductDetail = () => {
   const { id } = useParams<{ id: string }>();
   const { lang, t } = useI18n();
   const { addItem } = useCart();
+  const { product, isLoading } = useProduct(id);
   const [selectedSize, setSelectedSize] = useState('M');
   const [added, setAdded] = useState(false);
 
-  const product = products.find((p) => p.id === id);
   const displayLang = lang === 'nl' ? 'fr' : lang;
+
+  if (isLoading) {
+    return (
+      <main className="container py-12">
+        <Skeleton className="h-4 w-32 mb-10" />
+        <div className="grid gap-12 md:grid-cols-2 lg:gap-20">
+          <Skeleton className="aspect-[3/4] w-full" />
+          <div className="space-y-4">
+            <Skeleton className="h-4 w-20" />
+            <Skeleton className="h-12 w-3/4" />
+            <Skeleton className="h-8 w-24" />
+            <Skeleton className="h-20 w-full" />
+          </div>
+        </div>
+      </main>
+    );
+  }
 
   if (!product) {
     return (
