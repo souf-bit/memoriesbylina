@@ -1,6 +1,7 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
+import { useAuth } from '@/lib/auth';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -8,10 +9,18 @@ import { Mail, Lock } from 'lucide-react';
 
 const AdminLogin = () => {
   const navigate = useNavigate();
+  const { user, isAdmin, loading: authLoading } = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+
+  // Redirect if already logged in as admin
+  useEffect(() => {
+    if (!authLoading && user && isAdmin) {
+      navigate('/admin');
+    }
+  }, [user, isAdmin, authLoading, navigate]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -22,12 +31,11 @@ const AdminLogin = () => {
       email,
       password,
     });
-    setLoading(false);
     if (err) {
+      setLoading(false);
       setError(err.message);
-    } else {
-      navigate('/admin');
     }
+    // Don't setLoading(false) on success - the auth state change will trigger redirect
   };
 
   return (
