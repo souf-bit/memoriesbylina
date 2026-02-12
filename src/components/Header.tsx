@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Menu, X, Globe } from 'lucide-react';
+import { Menu, Globe } from 'lucide-react';
 import { useI18n } from '@/lib/i18n';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger, SheetTitle } from '@/components/ui/sheet';
@@ -19,20 +19,27 @@ const Header = () => {
   const isActive = (path: string) => location.pathname === path;
 
   return (
-    <header className="sticky top-0 z-40 border-b border-border/40 bg-background/80 backdrop-blur-md">
-      <div className="container flex h-16 items-center justify-between">
-        <Link to="/" className="font-serif text-2xl font-bold text-primary">
-          Élégance
+    <header className="sticky top-0 z-40 bg-background/95 backdrop-blur-sm border-b border-border/30">
+      <div className="container flex h-20 items-center justify-between">
+        <Link to="/" className="flex flex-col items-center">
+          <span className="font-serif text-3xl font-semibold tracking-wide text-foreground">
+            ÉLÉGANCE
+          </span>
+          <span className="text-[10px] font-sans uppercase tracking-[0.35em] text-muted-foreground mt-[-2px]">
+            Collection Femme
+          </span>
         </Link>
 
         {/* Desktop nav */}
-        <nav className="hidden md:flex items-center gap-8">
+        <nav className="hidden md:flex items-center gap-10">
           {links.map((link) => (
             <Link
               key={link.to}
               to={link.to}
-              className={`text-sm font-medium transition-colors hover:text-primary ${
-                isActive(link.to) ? 'text-primary' : 'text-muted-foreground'
+              className={`text-xs font-sans font-medium uppercase tracking-[0.15em] transition-colors hover:text-primary ${
+                isActive(link.to)
+                  ? 'text-primary'
+                  : 'text-muted-foreground'
               }`}
             >
               {link.label}
@@ -40,14 +47,14 @@ const Header = () => {
           ))}
         </nav>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1">
           <Button
             variant="ghost"
             size="sm"
             onClick={() => setLang(lang === 'ar' ? 'fr' : 'ar')}
-            className="gap-1.5"
+            className="gap-1.5 text-xs font-sans uppercase tracking-wider"
           >
-            <Globe className="h-4 w-4" />
+            <Globe className="h-3.5 w-3.5" />
             {lang === 'ar' ? 'FR' : 'عربي'}
           </Button>
 
@@ -59,14 +66,14 @@ const Header = () => {
               </Button>
             </SheetTrigger>
             <SheetContent side={lang === 'ar' ? 'right' : 'left'} className="w-72">
-              <SheetTitle className="font-serif text-xl text-primary">Élégance</SheetTitle>
-              <nav className="mt-8 flex flex-col gap-4">
+              <SheetTitle className="font-serif text-2xl tracking-wide">ÉLÉGANCE</SheetTitle>
+              <nav className="mt-10 flex flex-col gap-6">
                 {links.map((link) => (
                   <Link
                     key={link.to}
                     to={link.to}
                     onClick={() => setOpen(false)}
-                    className={`text-lg font-medium transition-colors hover:text-primary ${
+                    className={`text-sm font-sans font-medium uppercase tracking-[0.15em] transition-colors hover:text-primary ${
                       isActive(link.to) ? 'text-primary' : 'text-muted-foreground'
                     }`}
                   >

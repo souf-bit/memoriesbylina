@@ -4,6 +4,7 @@ import { ArrowLeft, MessageCircle } from 'lucide-react';
 import { useI18n } from '@/lib/i18n';
 import { products, getWhatsAppLink } from '@/lib/products';
 import { Button } from '@/components/ui/button';
+import { motion } from 'framer-motion';
 
 const ProductDetail = () => {
   const { id } = useParams<{ id: string }>();
@@ -26,43 +27,61 @@ const ProductDetail = () => {
   const whatsappLink = getWhatsAppLink(product.name[lang], selectedSize, product.price, lang);
 
   return (
-    <main className="container py-10">
-      <Button asChild variant="ghost" size="sm" className="mb-6">
-        <Link to="/catalog">
-          <ArrowLeft className="h-4 w-4 me-1" />
-          {t('nav.catalog')}
-        </Link>
-      </Button>
+    <main className="container py-12">
+      <Link
+        to="/catalog"
+        className="inline-flex items-center gap-2 text-xs font-sans uppercase tracking-[0.15em] text-muted-foreground hover:text-foreground transition-colors mb-10"
+      >
+        <ArrowLeft className="h-3.5 w-3.5" />
+        {t('nav.catalog')}
+      </Link>
 
-      <div className="grid gap-10 md:grid-cols-2">
-        <div className="aspect-[3/4] overflow-hidden rounded-2xl">
+      <div className="grid gap-12 md:grid-cols-2 lg:gap-20">
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.5 }}
+          className="aspect-[3/4] overflow-hidden bg-muted"
+        >
           <img
             src={product.image}
             alt={product.name[lang]}
             className="h-full w-full object-cover"
           />
-        </div>
+        </motion.div>
 
-        <div className="flex flex-col justify-center">
-          <h1 className="font-serif text-3xl font-bold">{product.name[lang]}</h1>
-          <p className="mt-3 text-2xl font-bold text-primary">
+        <motion.div
+          initial={{ opacity: 0, x: 20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.5, delay: 0.2 }}
+          className="flex flex-col justify-center"
+        >
+          <p className="font-sans text-[10px] uppercase tracking-[0.3em] text-muted-foreground mb-3">
+            {t(`sections.${product.category}`)}
+          </p>
+          <h1 className="font-serif text-4xl md:text-5xl font-semibold leading-tight">
+            {product.name[lang]}
+          </h1>
+          <p className="mt-4 font-serif text-2xl text-primary font-semibold">
             {product.price} {t('product.price')}
           </p>
-          <p className="mt-4 text-muted-foreground leading-relaxed">
+          <p className="mt-6 text-muted-foreground font-light leading-relaxed">
             {product.description[lang]}
           </p>
 
-          <div className="mt-8">
-            <label className="text-sm font-medium">{t('product.size')}</label>
-            <div className="flex gap-3 mt-3">
+          <div className="mt-10">
+            <label className="text-xs font-sans uppercase tracking-[0.2em] text-muted-foreground">
+              {t('product.size')}
+            </label>
+            <div className="flex gap-3 mt-4">
               {product.sizes.map((size) => (
                 <button
                   key={size}
                   onClick={() => setSelectedSize(size)}
-                  className={`flex h-12 w-12 items-center justify-center rounded-full border-2 text-sm font-medium transition-all ${
+                  className={`flex h-14 w-14 items-center justify-center border text-sm font-sans font-medium tracking-wider transition-all duration-200 ${
                     selectedSize === size
-                      ? 'border-primary bg-primary text-primary-foreground'
-                      : 'border-border hover:border-primary'
+                      ? 'border-foreground bg-foreground text-background'
+                      : 'border-border hover:border-foreground text-foreground'
                   }`}
                 >
                   {size}
@@ -71,13 +90,16 @@ const ProductDetail = () => {
             </div>
           </div>
 
-          <a href={whatsappLink} target="_blank" rel="noopener noreferrer" className="mt-8">
-            <Button size="lg" className="w-full rounded-full gap-2 bg-[hsl(142,70%,45%)] hover:bg-[hsl(142,70%,40%)] text-white">
-              <MessageCircle className="h-5 w-5" />
+          <a href={whatsappLink} target="_blank" rel="noopener noreferrer" className="mt-10">
+            <Button
+              size="lg"
+              className="w-full rounded-none py-7 gap-3 text-xs uppercase tracking-[0.2em] font-sans font-medium bg-[hsl(142,70%,40%)] hover:bg-[hsl(142,70%,35%)] text-white"
+            >
+              <MessageCircle className="h-4 w-4" />
               {t('product.order')}
             </Button>
           </a>
-        </div>
+        </motion.div>
       </div>
     </main>
   );
