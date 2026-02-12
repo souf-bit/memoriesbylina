@@ -79,8 +79,16 @@ const AdminDashboard = () => {
     queryClient.invalidateQueries({ queryKey: ['products'] });
   };
 
+  const ALLOWED_MIME_TYPES = ['image/jpeg', 'image/png', 'image/webp'];
+  const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
+  const MIME_TO_EXT: Record<string, string> = {
+    'image/jpeg': 'jpg',
+    'image/png': 'png',
+    'image/webp': 'webp',
+  };
+
   const uploadImage = async (file: File): Promise<string> => {
-    const ext = file.name.split('.').pop();
+    const ext = MIME_TO_EXT[file.type] || 'jpg';
     const path = `${crypto.randomUUID()}.${ext}`;
     const { error } = await supabase.storage
       .from('product-images')
@@ -93,6 +101,14 @@ const AdminDashboard = () => {
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
+      if (file.size > MAX_FILE_SIZE) {
+        toast({ title: 'Fout', description: 'Bestand moet kleiner zijn dan 5MB', variant: 'destructive' });
+        return;
+      }
+      if (!ALLOWED_MIME_TYPES.includes(file.type)) {
+        toast({ title: 'Fout', description: 'Alleen JPEG, PNG en WebP afbeeldingen toegestaan', variant: 'destructive' });
+        return;
+      }
       setImageFile(file);
       setImagePreview(URL.createObjectURL(file));
     }
@@ -205,7 +221,7 @@ const AdminDashboard = () => {
           <label className="cursor-pointer inline-flex items-center gap-2 px-4 py-2 border border-border text-xs uppercase tracking-wider font-sans font-medium hover:bg-muted transition-colors">
             <Upload className="h-4 w-4" />
             Foto kiezen
-            <input type="file" accept="image/*" onChange={handleImageChange} className="hidden" />
+            <input type="file" accept="image/jpeg,image/png,image/webp" onChange={handleImageChange} className="hidden" />
           </label>
         </div>
       </div>
