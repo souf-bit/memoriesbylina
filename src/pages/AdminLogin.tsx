@@ -7,23 +7,37 @@ import { Label } from '@/components/ui/label';
 import { Lock, Mail } from 'lucide-react';
 
 const AdminLogin = () => {
-  const { signIn } = useAuth();
+  const { signIn, signUp } = useAuth();
   const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [info, setInfo] = useState('');
   const [loading, setLoading] = useState(false);
+  const [isRegister, setIsRegister] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
+    setInfo('');
     setLoading(true);
-    const { error: err } = await signIn(email, password);
-    setLoading(false);
-    if (err) {
-      setError(err);
+
+    if (isRegister) {
+      const { error: err } = await signUp(email, password);
+      setLoading(false);
+      if (err) {
+        setError(err);
+      } else {
+        setInfo('Un email de confirmation a été envoyé. Vérifiez votre boîte de réception.');
+      }
     } else {
-      navigate('/admin');
+      const { error: err } = await signIn(email, password);
+      setLoading(false);
+      if (err) {
+        setError(err);
+      } else {
+        navigate('/admin');
+      }
     }
   };
 
@@ -33,7 +47,7 @@ const AdminLogin = () => {
         <div className="text-center">
           <h1 className="font-serif text-3xl font-semibold">Admin</h1>
           <p className="text-sm text-muted-foreground mt-2 font-sans">
-            Connectez-vous pour gérer vos produits
+            {isRegister ? 'Créez votre compte administrateur' : 'Connectez-vous pour gérer vos produits'}
           </p>
         </div>
 
@@ -69,18 +83,24 @@ const AdminLogin = () => {
             </div>
           </div>
 
-          {error && (
-            <p className="text-sm text-destructive font-sans">{error}</p>
-          )}
+          {error && <p className="text-sm text-destructive font-sans">{error}</p>}
+          {info && <p className="text-sm text-[hsl(142,70%,40%)] font-sans">{info}</p>}
 
           <Button
             type="submit"
             disabled={loading}
             className="w-full rounded-none py-6 text-xs uppercase tracking-[0.2em] font-sans font-medium"
           >
-            {loading ? 'Connexion...' : 'Se connecter'}
+            {loading ? '...' : isRegister ? "S'inscrire" : 'Se connecter'}
           </Button>
         </form>
+
+        <button
+          onClick={() => { setIsRegister(!isRegister); setError(''); setInfo(''); }}
+          className="w-full text-center text-sm font-sans text-muted-foreground hover:text-foreground transition-colors"
+        >
+          {isRegister ? 'Déjà un compte ? Se connecter' : "Pas de compte ? S'inscrire"}
+        </button>
       </div>
     </main>
   );
