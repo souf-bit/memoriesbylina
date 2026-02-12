@@ -41,7 +41,7 @@ const Footer = () => {
                 +212 620 198 762
               </a>
               <a
-                href="https://instagram.com/elegance"
+                href="https://www.instagram.com/memories_by_lina?igsh=eTdyNGJlb3V0dXU0&utm_source=qr"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center gap-3 text-sm text-muted-foreground hover:text-foreground transition-colors font-light"

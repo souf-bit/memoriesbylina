@@ -61,7 +61,7 @@ const Contact = () => {
           </a>
 
           <a
-            href="https://instagram.com/elegance"
+            href="https://www.instagram.com/memories_by_lina?igsh=eTdyNGJlb3V0dXU0&utm_source=qr"
             target="_blank"
             rel="noopener noreferrer"
             className="flex items-center gap-5 border border-border/50 p-6 hover:border-foreground/30 transition-all duration-300"
@@ -71,7 +71,7 @@ const Contact = () => {
             </div>
             <div>
               <p className="text-sm font-sans font-medium">{t('contact.instagram')}</p>
-              <p className="text-xs text-muted-foreground mt-1">@elegance</p>
+              <p className="text-xs text-muted-foreground mt-1">@memories_by_lina</p>
             </div>
           </a>
         </motion.div>
