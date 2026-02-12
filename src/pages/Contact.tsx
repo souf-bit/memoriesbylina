@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { MessageCircle, Phone } from 'lucide-react';
+import { MessageCircle, Phone, CheckCircle } from 'lucide-react';
 import { useI18n } from '@/lib/i18n';
 import { WHATSAPP_NUMBER } from '@/lib/products';
 import { Button } from '@/components/ui/button';
@@ -20,7 +20,7 @@ const Contact = () => {
     <main className="container py-16">
       <div className="text-center mb-16">
         <p className="font-sans text-xs uppercase tracking-[0.3em] text-muted-foreground mb-3">
-          Contact
+          {t('footer.contact')}
         </p>
         <h1 className="font-serif text-4xl md:text-5xl font-semibold">{t('contact.title')}</h1>
       </div>
@@ -43,7 +43,7 @@ const Contact = () => {
             </div>
             <div>
               <p className="text-sm font-sans font-medium">{t('contact.whatsapp')}</p>
-              <p className="text-xs text-muted-foreground mt-1">0620198762</p>
+              <p className="text-xs text-muted-foreground mt-1">+212 620 198 762</p>
             </div>
           </a>
 
@@ -56,12 +56,12 @@ const Contact = () => {
             </div>
             <div>
               <p className="text-sm font-sans font-medium">{t('contact.phone')}</p>
-              <p className="text-xs text-muted-foreground mt-1">0620198762</p>
+              <p className="text-xs text-muted-foreground mt-1">+212 620 198 762</p>
             </div>
           </a>
 
           <a
-            href="https://instagram.com"
+            href="https://instagram.com/elegance"
             target="_blank"
             rel="noopener noreferrer"
             className="flex items-center gap-5 border border-border/50 p-6 hover:border-foreground/30 transition-all duration-300"
@@ -82,9 +82,9 @@ const Contact = () => {
           transition={{ duration: 0.5, delay: 0.15 }}
         >
           {sent ? (
-            <div className="border border-border/50 p-12 text-center">
-              <p className="font-serif text-2xl font-semibold">✓</p>
-              <p className="mt-3 text-sm text-muted-foreground">{t('contact.form.send')}!</p>
+            <div className="border border-border/50 p-12 text-center space-y-4">
+              <CheckCircle className="h-12 w-12 text-[hsl(142,70%,40%)] mx-auto" />
+              <p className="font-serif text-xl font-semibold">{t('contact.form.success')}</p>
             </div>
           ) : (
             <form onSubmit={handleSubmit} className="space-y-6">

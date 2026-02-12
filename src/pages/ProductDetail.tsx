@@ -15,11 +15,12 @@ const ProductDetail = () => {
   const [added, setAdded] = useState(false);
 
   const product = products.find((p) => p.id === id);
+  const displayLang = lang === 'nl' ? 'fr' : lang;
 
   if (!product) {
     return (
       <div className="container py-20 text-center">
-        <p className="text-muted-foreground">Product not found</p>
+        <p className="text-muted-foreground">{t('product.notFound')}</p>
         <Button asChild variant="link" className="mt-4">
           <Link to="/catalog">{t('nav.catalog')}</Link>
         </Button>
@@ -52,7 +53,7 @@ const ProductDetail = () => {
         >
           <img
             src={product.image}
-            alt={product.name[lang]}
+            alt={product.name[displayLang]}
             className="h-full w-full object-cover"
           />
         </motion.div>
@@ -67,13 +68,13 @@ const ProductDetail = () => {
             {t(`sections.${product.category}`)}
           </p>
           <h1 className="font-serif text-4xl md:text-5xl font-semibold leading-tight">
-            {product.name[lang]}
+            {product.name[displayLang]}
           </h1>
           <p className="mt-4 font-serif text-2xl text-primary font-semibold">
             {product.price} {t('product.price')}
           </p>
           <p className="mt-6 text-muted-foreground font-light leading-relaxed">
-            {product.description[lang]}
+            {product.description[displayLang]}
           </p>
 
           <div className="mt-10">
@@ -109,12 +110,12 @@ const ProductDetail = () => {
             {added ? (
               <>
                 <Check className="h-4 w-4" />
-                {lang === 'ar' ? 'تمت الإضافة!' : 'Ajouté !'}
+                {t('product.added')}
               </>
             ) : (
               <>
                 <ShoppingBag className="h-4 w-4" />
-                {lang === 'ar' ? 'أضيفي إلى السلة' : 'Ajouter au panier'}
+                {t('product.addToCart')}
               </>
             )}
           </Button>

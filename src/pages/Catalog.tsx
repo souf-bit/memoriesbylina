@@ -19,7 +19,7 @@ const Catalog = () => {
     <main className="container py-16">
       <div className="text-center mb-16">
         <p className="font-sans text-xs uppercase tracking-[0.3em] text-muted-foreground mb-3">
-          Collection
+          {t('catalog.label')}
         </p>
         <h1 className="font-serif text-4xl md:text-5xl font-semibold">{t('catalog.title')}</h1>
       </div>

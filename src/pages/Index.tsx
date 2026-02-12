@@ -29,7 +29,7 @@ const Index = () => {
     <main>
       {/* Hero Banner */}
       <section className="relative h-[85vh] min-h-[500px] flex items-center justify-center overflow-hidden">
-        <img src={heroBanner} alt="" className="absolute inset-0 h-full w-full object-cover" />
+        <img src={heroBanner} alt={t('hero.title')} className="absolute inset-0 h-full w-full object-cover" />
         <div className="absolute inset-0 bg-background/30" />
         <motion.div
           initial={{ opacity: 0, y: 40 }}
@@ -38,7 +38,7 @@ const Index = () => {
           className="relative z-10 text-center px-4"
         >
           <p className="font-sans text-xs uppercase tracking-[0.4em] text-muted-foreground mb-6">
-            Collection 2025
+            {t('hero.label')}
           </p>
           <h1 className="font-serif text-5xl md:text-7xl font-semibold text-foreground mb-6 leading-tight">
             {t('hero.title')}
@@ -61,7 +61,7 @@ const Index = () => {
           className="text-center mb-16"
         >
           <motion.p variants={fadeUp} custom={0} className="font-sans text-xs uppercase tracking-[0.3em] text-muted-foreground mb-3">
-            Découvrir
+            {t('sections.label')}
           </motion.p>
           <motion.h2 variants={fadeUp} custom={1} className="font-serif text-4xl md:text-5xl font-semibold">
             {t('sections.title')}
@@ -86,6 +86,7 @@ const Index = () => {
                   src={cat.image}
                   alt={t(`sections.${cat.id}`)}
                   className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+                  loading="lazy"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-foreground/80 via-foreground/20 to-transparent" />
                 <div className="absolute bottom-0 left-0 right-0 p-8">
@@ -117,7 +118,7 @@ const Index = () => {
             className="text-center mb-16"
           >
             <motion.p variants={fadeUp} custom={0} className="font-sans text-xs uppercase tracking-[0.3em] text-muted-foreground mb-3">
-              Sélection
+              {t('featured.label')}
             </motion.p>
             <motion.h2 variants={fadeUp} custom={1} className="font-serif text-4xl md:text-5xl font-semibold">
               {t('featured.title')}
