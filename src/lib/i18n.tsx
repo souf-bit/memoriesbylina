@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 
-type Language = 'ar' | 'fr';
+type Language = 'ar' | 'fr' | 'nl';
 
 interface I18nContextType {
   lang: Language;
@@ -84,6 +84,43 @@ const translations: Record<Language, Record<string, string>> = {
     'footer.contact': 'Contact',
     'whatsapp.message': 'Bonjour, je souhaite commander:',
   },
+  nl: {
+    'nav.home': 'Home',
+    'nav.catalog': 'Catalogus',
+    'nav.contact': 'Contact',
+    'nav.robes': 'Jurken',
+    'nav.jelbabs': 'Jelbabs',
+    'nav.complets': 'Complets',
+    'hero.title': 'Uw elegantie begint hier',
+    'hero.subtitle': 'Ontdek onze nieuwe collectie verfijnde dameskleding',
+    'hero.cta': 'Bekijk de catalogus',
+    'sections.title': 'Onze Categorieën',
+    'sections.robes': 'Jurken',
+    'sections.jelbabs': 'Jelbabs',
+    'sections.complets': 'Complets',
+    'sections.robes.desc': 'Elegante jurken met moderne designs',
+    'sections.jelbabs.desc': 'Geborduurde jelbabs met een traditionele toets',
+    'sections.complets.desc': 'Luxueuze complets voor een unieke look',
+    'featured.title': 'Uitgelichte Producten',
+    'product.size': 'Maat',
+    'product.order': 'Bestel via WhatsApp',
+    'product.price': 'DH',
+    'catalog.title': 'Catalogus',
+    'catalog.all': 'Alles',
+    'catalog.filter': 'Filteren op categorie',
+    'contact.title': 'Neem contact op',
+    'contact.phone': 'Telefoon',
+    'contact.whatsapp': 'WhatsApp',
+    'contact.instagram': 'Instagram',
+    'contact.form.name': 'Naam',
+    'contact.form.email': 'E-mail',
+    'contact.form.message': 'Bericht',
+    'contact.form.send': 'Verzenden',
+    'footer.rights': 'Alle rechten voorbehouden',
+    'footer.quicklinks': 'Snelle links',
+    'footer.contact': 'Contact',
+    'whatsapp.message': 'Hallo, ik wil graag bestellen:',
+  },
 };
 
 const I18nContext = createContext<I18nContextType | undefined>(undefined);
@@ -91,7 +128,9 @@ const I18nContext = createContext<I18nContextType | undefined>(undefined);
 export const I18nProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [lang, setLang] = useState<Language>(() => {
     const browserLang = navigator.language.toLowerCase();
-    return browserLang.startsWith('ar') ? 'ar' : 'fr';
+    if (browserLang.startsWith('ar')) return 'ar';
+    if (browserLang.startsWith('nl')) return 'nl';
+    return 'fr';
   });
 
   const dir = lang === 'ar' ? 'rtl' : 'ltr';

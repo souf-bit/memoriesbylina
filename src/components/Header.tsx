@@ -50,15 +50,21 @@ const Header = () => {
         </nav>
 
         <div className="flex items-center gap-1">
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => setLang(lang === 'ar' ? 'fr' : 'ar')}
-            className="gap-1.5 text-xs font-sans uppercase tracking-wider"
-          >
-            <Globe className="h-3.5 w-3.5" />
-            {lang === 'ar' ? 'FR' : 'عربي'}
-          </Button>
+          <div className="flex items-center">
+            {(['ar', 'fr', 'nl'] as const).map((l) => (
+              <Button
+                key={l}
+                variant="ghost"
+                size="sm"
+                onClick={() => setLang(l)}
+                className={`text-xs font-sans uppercase tracking-wider px-1.5 min-w-0 ${
+                  lang === l ? 'text-primary font-bold' : 'text-muted-foreground'
+                }`}
+              >
+                {l === 'ar' ? 'عربي' : l === 'fr' ? 'FR' : 'NL'}
+              </Button>
+            ))}
+          </div>
 
           {/* Cart button */}
           <Button
