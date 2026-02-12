@@ -12,31 +12,40 @@ const AdminLogin = () => {
   const [password, setPassword] = useState('');
   const [mode, setMode] = useState<'login' | 'signup'>('login');
   const [error, setError] = useState('');
+  const [info, setInfo] = useState('');
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
+    setInfo('');
     setLoading(true);
 
     if (mode === 'signup') {
-      const { error: err } = await supabase.auth.signUp({
+      const { data, error: err } = await supabase.auth.signUp({
         email,
         password,
       });
-      setLoading(false);
       if (err) {
+        setLoading(false);
         setError(err.message);
-      } else {
-        setError('');
+        return;
+      }
+      // If auto-confirm is on, session is returned directly
+      if (data.session) {
+        setLoading(false);
+        navigate('/admin');
+        return;
+      }
+      // Otherwise wait a moment and try to login
+      await new Promise(r => setTimeout(r, 1000));
+      const { error: loginErr } = await supabase.auth.signInWithPassword({ email, password });
+      setLoading(false);
+      if (loginErr) {
+        setInfo('Compte créé ! Connectez-vous maintenant.');
         setMode('login');
-        // Auto-confirm is enabled, so we can login immediately
-        const { error: loginErr } = await supabase.auth.signInWithPassword({ email, password });
-        if (loginErr) {
-          setError(loginErr.message);
-        } else {
-          navigate('/admin');
-        }
+      } else {
+        navigate('/admin');
       }
     } else {
       const { error: err } = await supabase.auth.signInWithPassword({
