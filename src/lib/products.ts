@@ -17,8 +17,8 @@ export type Category = 'robes' | 'jelbabs' | 'complets';
 
 export interface Product {
   id: string;
-  name: { ar: string; fr: string };
-  description: { ar: string; fr: string };
+  name: { ar: string; fr: string; nl: string };
+  description: { ar: string; fr: string; nl: string };
   category: Category;
   price: number;
   sizes: string[];
@@ -28,8 +28,8 @@ export interface Product {
 export const products: Product[] = [
   {
     id: 'robe-pink-tweed',
-    name: { ar: 'روب زهري تويد', fr: 'Robe Rose Tweed' },
-    description: { ar: 'روب أنيق من قماش التويد الزهري بتصميم عصري وراقي', fr: 'Robe élégante en tweed rose au design moderne et raffiné' },
+    name: { ar: 'روب زهري تويد', fr: 'Robe Rose Tweed', nl: 'Roze Tweed Jurk' },
+    description: { ar: 'روب أنيق من قماش التويد الزهري بتصميم عصري وراقي', fr: 'Robe élégante en tweed rose au design moderne et raffiné', nl: 'Elegante roze tweed jurk met modern en verfijnd ontwerp' },
     category: 'robes',
     price: 399,
     sizes: ['S', 'M', 'XL'],
@@ -37,8 +37,8 @@ export const products: Product[] = [
   },
   {
     id: 'robe-red-tweed',
-    name: { ar: 'روب أحمر تويد', fr: 'Robe Rouge Tweed' },
-    description: { ar: 'روب فاخر من التويد الأحمر بقصة كلاسيكية', fr: 'Robe luxueuse en tweed rouge à coupe classique' },
+    name: { ar: 'روب أحمر تويد', fr: 'Robe Rouge Tweed', nl: 'Rode Tweed Jurk' },
+    description: { ar: 'روب فاخر من التويد الأحمر بقصة كلاسيكية', fr: 'Robe luxueuse en tweed rouge à coupe classique', nl: 'Luxueuze rode tweed jurk met klassieke snit' },
     category: 'robes',
     price: 399,
     sizes: ['S', 'M', 'XL'],
@@ -46,8 +46,8 @@ export const products: Product[] = [
   },
   {
     id: 'robe-pink-blazer',
-    name: { ar: 'بلايزر زهري تويد فاخر', fr: 'Blazer Rose Tweed Luxe' },
-    description: { ar: 'بلايزر أنيق من التويد الزهري مع تفاصيل ذهبية وأزرار لؤلؤية، مثالي للمناسبات الراقية', fr: 'Blazer élégant en tweed rose avec détails dorés et boutons nacrés, parfait pour les occasions chics' },
+    name: { ar: 'بلايزر زهري تويد فاخر', fr: 'Blazer Rose Tweed Luxe', nl: 'Roze Tweed Blazer Luxe' },
+    description: { ar: 'بلايزر أنيق من التويد الزهري مع تفاصيل ذهبية وأزرار لؤلؤية، مثالي للمناسبات الراقية', fr: 'Blazer élégant en tweed rose avec détails dorés et boutons nacrés, parfait pour les occasions chics', nl: 'Elegante roze tweed blazer met gouden details en parelmoeren knopen, perfect voor chique gelegenheden' },
     category: 'robes',
     price: 449,
     sizes: ['S', 'M', 'L', 'XL'],
@@ -55,8 +55,8 @@ export const products: Product[] = [
   },
   {
     id: 'robe-red-chic',
-    name: { ar: 'فستان أحمر شيك', fr: 'Robe Rouge Chic' },
-    description: { ar: 'فستان تويد أحمر فاخر بياقة كلاسيكية وجيوب أمامية، أناقة لا مثيل لها مع إكسسوارات ذهبية', fr: 'Robe en tweed rouge luxueuse avec col classique et poches avant, élégance incomparable avec accessoires dorés' },
+    name: { ar: 'فستان أحمر شيك', fr: 'Robe Rouge Chic', nl: 'Rode Chique Jurk' },
+    description: { ar: 'فستان تويد أحمر فاخر بياقة كلاسيكية وجيوب أمامية، أناقة لا مثيل لها مع إكسسوارات ذهبية', fr: 'Robe en tweed rouge luxueuse avec col classique et poches avant, élégance incomparable avec accessoires dorés', nl: 'Luxueuze rode tweed jurk met klassieke kraag en voorvakken, ongeëvenaarde elegantie met gouden accessoires' },
     category: 'robes',
     price: 469,
     sizes: ['S', 'M', 'L', 'XL'],
@@ -64,8 +64,8 @@ export const products: Product[] = [
   },
   {
     id: 'jelbab-gold',
-    name: { ar: 'جلباب ذهبي مطرز', fr: 'Jelbab Doré Brodé' },
-    description: { ar: 'جلباب فاخر بتطريز ذهبي يدوي رائع', fr: 'Jelbab luxueux avec broderie dorée artisanale' },
+    name: { ar: 'جلباب ذهبي مطرز', fr: 'Jelbab Doré Brodé', nl: 'Gouden Geborduurde Jelbab' },
+    description: { ar: 'جلباب فاخر بتطريز ذهبي يدوي رائع', fr: 'Jelbab luxueux avec broderie dorée artisanale', nl: 'Luxueuze jelbab met ambachtelijk goudkleurig borduurwerk' },
     category: 'jelbabs',
     price: 355,
     sizes: ['S', 'M', 'XL'],
@@ -73,8 +73,8 @@ export const products: Product[] = [
   },
   {
     id: 'jelbab-white-green',
-    name: { ar: 'جلباب أبيض وأخضر', fr: 'Jelbab Blanc et Vert' },
-    description: { ar: 'جلباب أبيض بزخارف خضراء أنيقة', fr: 'Jelbab blanc avec motifs verts élégants' },
+    name: { ar: 'جلباب أبيض وأخضر', fr: 'Jelbab Blanc et Vert', nl: 'Wit-Groene Jelbab' },
+    description: { ar: 'جلباب أبيض بزخارف خضراء أنيقة', fr: 'Jelbab blanc avec motifs verts élégants', nl: 'Witte jelbab met elegante groene motieven' },
     category: 'jelbabs',
     price: 355,
     sizes: ['S', 'M', 'XL'],
@@ -82,8 +82,8 @@ export const products: Product[] = [
   },
   {
     id: 'jelbab-green',
-    name: { ar: 'جلباب أخضر', fr: 'Jelbab Vert' },
-    description: { ar: 'جلباب أخضر فاخر بتصميم تقليدي عصري', fr: 'Jelbab vert luxueux au design traditionnel moderne' },
+    name: { ar: 'جلباب أخضر', fr: 'Jelbab Vert', nl: 'Groene Jelbab' },
+    description: { ar: 'جلباب أخضر فاخر بتصميم تقليدي عصري', fr: 'Jelbab vert luxueux au design traditionnel moderne', nl: 'Luxueuze groene jelbab met modern traditioneel ontwerp' },
     category: 'jelbabs',
     price: 355,
     sizes: ['S', 'M', 'XL'],
@@ -91,8 +91,8 @@ export const products: Product[] = [
   },
   {
     id: 'jelbab-gold-royal',
-    name: { ar: 'جلباب ذهبي ملكي', fr: 'Jelbab Doré Royal' },
-    description: { ar: 'جلباب ملكي بنقوش ذهبية فاخرة وتطريز يدوي دقيق مع أكمام واسعة وياقة مزخرفة', fr: 'Jelbab royal aux motifs dorés luxueux et broderie artisanale avec manches larges et col orné' },
+    name: { ar: 'جلباب ذهبي ملكي', fr: 'Jelbab Doré Royal', nl: 'Koninklijke Gouden Jelbab' },
+    description: { ar: 'جلباب ملكي بنقوش ذهبية فاخرة وتطريز يدوي دقيق مع أكمام واسعة وياقة مزخرفة', fr: 'Jelbab royal aux motifs dorés luxueux et broderie artisanale avec manches larges et col orné', nl: 'Koninklijke jelbab met luxueuze gouden motieven en ambachtelijk borduurwerk, wijde mouwen en versierde kraag' },
     category: 'jelbabs',
     price: 499,
     sizes: ['S', 'M', 'L', 'XL'],
@@ -100,8 +100,8 @@ export const products: Product[] = [
   },
   {
     id: 'jelbab-white-sage',
-    name: { ar: 'جلباب أبيض وأخضر فاتح', fr: 'Jelbab Blanc et Vert Sauge' },
-    description: { ar: 'جلباب أبيض ناعم بلمسات خضراء فاتحة وتطريز تقليدي أنيق، مثالي للإطلالات اليومية الراقية', fr: 'Jelbab blanc doux avec touches vert sauge et broderie traditionnelle, idéal pour un look quotidien raffiné' },
+    name: { ar: 'جلباب أبيض وأخضر فاتح', fr: 'Jelbab Blanc et Vert Sauge', nl: 'Wit-Saliegroen Jelbab' },
+    description: { ar: 'جلباب أبيض ناعم بلمسات خضراء فاتحة وتطريز تقليدي أنيق، مثالي للإطلالات اليومية الراقية', fr: 'Jelbab blanc doux avec touches vert sauge et broderie traditionnelle, idéal pour un look quotidien raffiné', nl: 'Zachte witte jelbab met saliegroene accenten en traditioneel borduurwerk, ideaal voor een verfijnde dagelijkse look' },
     category: 'jelbabs',
     price: 385,
     sizes: ['S', 'M', 'L', 'XL'],
@@ -109,8 +109,8 @@ export const products: Product[] = [
   },
   {
     id: 'jelbab-sage-green',
-    name: { ar: 'جلباب أخضر زيتي', fr: 'Jelbab Vert Olive' },
-    description: { ar: 'جلباب أخضر زيتي أنيق بقماش فاخر وأكمام واسعة مع تفاصيل تقليدية مميزة', fr: 'Jelbab vert olive élégant en tissu luxueux avec manches larges et détails traditionnels distinctifs' },
+    name: { ar: 'جلباب أخضر زيتي', fr: 'Jelbab Vert Olive', nl: 'Olijfgroene Jelbab' },
+    description: { ar: 'جلباب أخضر زيتي أنيق بقماش فاخر وأكمام واسعة مع تفاصيل تقليدية مميزة', fr: 'Jelbab vert olive élégant en tissu luxueux avec manches larges et détails traditionnels distinctifs', nl: 'Elegante olijfgroene jelbab in luxueuze stof met wijde mouwen en onderscheidende traditionele details' },
     category: 'jelbabs',
     price: 375,
     sizes: ['S', 'M', 'L', 'XL'],
@@ -118,8 +118,8 @@ export const products: Product[] = [
   },
   {
     id: 'complet-white-fur',
-    name: { ar: 'كومبلي أبيض فرو', fr: 'Complet Blanc Fourrure' },
-    description: { ar: 'كومبلي أبيض فاخر بتفاصيل الفرو الأنيقة', fr: 'Complet blanc luxueux avec détails en fourrure' },
+    name: { ar: 'كومبلي أبيض فرو', fr: 'Complet Blanc Fourrure', nl: 'Wit Complet met Bont' },
+    description: { ar: 'كومبلي أبيض فاخر بتفاصيل الفرو الأنيقة', fr: 'Complet blanc luxueux avec détails en fourrure', nl: 'Luxueus wit complet met elegante bontdetails' },
     category: 'complets',
     price: 699,
     sizes: ['S', 'M', 'XL'],
@@ -127,8 +127,8 @@ export const products: Product[] = [
   },
   {
     id: 'complet-black-white',
-    name: { ar: 'كومبلي أبيض وأسود', fr: 'Complet Noir et Blanc' },
-    description: { ar: 'كومبلي أنيق بمزيج الأبيض والأسود الكلاسيكي', fr: 'Complet élégant en noir et blanc classique' },
+    name: { ar: 'كومبلي أبيض وأسود', fr: 'Complet Noir et Blanc', nl: 'Zwart-Wit Complet' },
+    description: { ar: 'كومبلي أنيق بمزيج الأبيض والأسود الكلاسيكي', fr: 'Complet élégant en noir et blanc classique', nl: 'Elegant complet in klassiek zwart-wit' },
     category: 'complets',
     price: 699,
     sizes: ['S', 'M', 'XL'],
@@ -136,8 +136,8 @@ export const products: Product[] = [
   },
   {
     id: 'complet-white-pearl',
-    name: { ar: 'كومبلي أبيض لؤلؤي', fr: 'Complet Blanc Perle' },
-    description: { ar: 'كومبلي أبيض فاخر مع تفاصيل فرو ناعمة وأزرار لؤلؤية، تصميم شتوي أنيق مع بيريه مطابق', fr: 'Complet blanc luxueux avec détails en fourrure douce et boutons nacrés, design hivernal chic avec béret assorti' },
+    name: { ar: 'كومبلي أبيض لؤلؤي', fr: 'Complet Blanc Perle', nl: 'Parelwit Complet' },
+    description: { ar: 'كومبلي أبيض فاخر مع تفاصيل فرو ناعمة وأزرار لؤلؤية، تصميم شتوي أنيق مع بيريه مطابق', fr: 'Complet blanc luxueux avec détails en fourrure douce et boutons nacrés, design hivernal chic avec béret assorti', nl: 'Luxueus wit complet met zachte bontdetails en parelmoeren knopen, chic winterontwerp met bijpassende baret' },
     category: 'complets',
     price: 749,
     sizes: ['S', 'M', 'L', 'XL'],
@@ -145,8 +145,8 @@ export const products: Product[] = [
   },
   {
     id: 'complet-noir-chanel',
-    name: { ar: 'كومبلي أبيض وأسود شانيل', fr: 'Complet Noir & Blanc Chanel' },
-    description: { ar: 'كومبلي فاخر بتصميم شانيل الكلاسيكي مع أزرار كريستالية وتفاصيل كشكش أنيقة', fr: 'Complet luxueux au design Chanel classique avec boutons en cristal et détails de volants élégants' },
+    name: { ar: 'كومبلي أبيض وأسود شانيل', fr: 'Complet Noir & Blanc Chanel', nl: 'Zwart-Wit Chanel Complet' },
+    description: { ar: 'كومبلي فاخر بتصميم شانيل الكلاسيكي مع أزرار كريستالية وتفاصيل كشكش أنيقة', fr: 'Complet luxueux au design Chanel classique avec boutons en cristal et détails de volants élégants', nl: 'Luxueus complet met klassiek Chanel-ontwerp, kristallen knopen en elegante ruche-details' },
     category: 'complets',
     price: 799,
     sizes: ['S', 'M', 'L', 'XL'],
@@ -177,7 +177,7 @@ export const getWhatsAppCartLink = (items: CartItem[], lang: 'ar' | 'fr' | 'nl')
     lang === 'ar'
       ? `• ${item.product.name.ar} - المقاس: ${item.size} - الكمية: ${item.quantity} - ${item.product.price * item.quantity} درهم`
       : lang === 'nl'
-      ? `• ${item.product.name.fr} - Maat: ${item.size} - Aantal: ${item.quantity} - ${item.product.price * item.quantity} DH`
+      ? `• ${item.product.name.nl} - Maat: ${item.size} - Aantal: ${item.quantity} - ${item.product.price * item.quantity} DH`
       : `• ${item.product.name.fr} - Taille: ${item.size} - Qté: ${item.quantity} - ${item.product.price * item.quantity} DH`
   );
   const header = lang === 'ar' ? 'مرحباً، أريد طلب:' : lang === 'nl' ? 'Hallo, ik wil graag bestellen:' : 'Bonjour, je souhaite commander:';

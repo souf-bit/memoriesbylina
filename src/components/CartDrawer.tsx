@@ -11,7 +11,7 @@ const CartDrawer = () => {
   const { lang, t } = useI18n();
 
   const whatsappLink = getWhatsAppCartLink(items, lang);
-  const displayLang = lang === 'nl' ? 'fr' : lang;
+  
 
   return (
     <Sheet open={isOpen} onOpenChange={setIsOpen}>
@@ -49,13 +49,13 @@ const CartDrawer = () => {
                     <div className="h-24 w-20 flex-shrink-0 overflow-hidden bg-muted">
                       <img
                         src={item.product.image}
-                        alt={item.product.name[displayLang]}
+                        alt={item.product.name[lang]}
                         className="h-full w-full object-cover"
                       />
                     </div>
                     <div className="flex-1 min-w-0">
                       <h4 className="font-serif text-sm font-semibold truncate">
-                        {item.product.name[displayLang]}
+                        {item.product.name[lang]}
                       </h4>
                       <p className="text-xs text-muted-foreground font-sans mt-1">
                         {t('product.size')}: {item.size}

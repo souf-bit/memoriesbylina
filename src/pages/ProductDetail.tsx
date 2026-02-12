@@ -16,7 +16,7 @@ const ProductDetail = () => {
   const [selectedSize, setSelectedSize] = useState('M');
   const [added, setAdded] = useState(false);
 
-  const displayLang = lang === 'nl' ? 'fr' : lang;
+  
 
   if (isLoading) {
     return (
@@ -71,7 +71,7 @@ const ProductDetail = () => {
         >
           <img
             src={product.image}
-            alt={product.name[displayLang]}
+            alt={product.name[lang]}
             className="h-full w-full object-cover"
           />
         </motion.div>
@@ -86,13 +86,13 @@ const ProductDetail = () => {
             {t(`sections.${product.category}`)}
           </p>
           <h1 className="font-serif text-4xl md:text-5xl font-semibold leading-tight">
-            {product.name[displayLang]}
+            {product.name[lang]}
           </h1>
           <p className="mt-4 font-serif text-2xl text-primary font-semibold">
             {product.price} {t('product.price')}
           </p>
           <p className="mt-6 text-muted-foreground font-light leading-relaxed">
-            {product.description[displayLang]}
+            {product.description[lang]}
           </p>
 
           <div className="mt-10">
