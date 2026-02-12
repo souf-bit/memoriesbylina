@@ -2,7 +2,7 @@ import { useSearchParams } from 'react-router-dom';
 import { useI18n } from '@/lib/i18n';
 import { products, type Category } from '@/lib/products';
 import ProductCard from '@/components/ProductCard';
-import { Button } from '@/components/ui/button';
+import { motion } from 'framer-motion';
 
 const categoryKeys: (Category | 'all')[] = ['all', 'robes', 'jelbabs', 'complets'];
 
@@ -16,16 +16,23 @@ const Catalog = () => {
     : products.filter((p) => p.category === activeCategory);
 
   return (
-    <main className="container py-10">
-      <h1 className="font-serif text-3xl font-bold mb-8">{t('catalog.title')}</h1>
+    <main className="container py-16">
+      <div className="text-center mb-16">
+        <p className="font-sans text-xs uppercase tracking-[0.3em] text-muted-foreground mb-3">
+          Collection
+        </p>
+        <h1 className="font-serif text-4xl md:text-5xl font-semibold">{t('catalog.title')}</h1>
+      </div>
 
-      <div className="flex flex-wrap gap-2 mb-8">
+      <div className="flex justify-center flex-wrap gap-1 mb-16">
         {categoryKeys.map((cat) => (
-          <Button
+          <button
             key={cat}
-            variant={activeCategory === cat ? 'default' : 'outline'}
-            size="sm"
-            className="rounded-full"
+            className={`px-6 py-3 text-xs font-sans uppercase tracking-[0.15em] font-medium transition-all duration-200 ${
+              activeCategory === cat
+                ? 'bg-foreground text-background'
+                : 'text-muted-foreground hover:text-foreground'
+            }`}
             onClick={() => {
               if (cat === 'all') {
                 setSearchParams({});
@@ -35,15 +42,25 @@ const Catalog = () => {
             }}
           >
             {cat === 'all' ? t('catalog.all') : t(`sections.${cat}`)}
-          </Button>
+          </button>
         ))}
       </div>
 
-      <div className="grid gap-6 grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-        {filtered.map((product) => (
-          <ProductCard key={product.id} product={product} />
+      <motion.div
+        layout
+        className="grid gap-8 grid-cols-2 md:grid-cols-3 lg:grid-cols-4"
+      >
+        {filtered.map((product, i) => (
+          <motion.div
+            key={product.id}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: i * 0.05, duration: 0.4 }}
+          >
+            <ProductCard product={product} />
+          </motion.div>
         ))}
-      </div>
+      </motion.div>
     </main>
   );
 };
