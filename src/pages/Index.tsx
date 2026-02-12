@@ -1,15 +1,16 @@
 import { Link } from 'react-router-dom';
 import { useI18n } from '@/lib/i18n';
-import { products } from '@/lib/products';
+import { useProducts } from '@/hooks/useProducts';
+import { products as staticProducts } from '@/lib/products';
 import ProductCard from '@/components/ProductCard';
 import { Button } from '@/components/ui/button';
 import { motion } from 'framer-motion';
 import heroBanner from '@/assets/hero-banner.jpg';
 
 const categories = [
-  { id: 'robes', image: products.find(p => p.category === 'robes')!.image },
-  { id: 'jelbabs', image: products.find(p => p.category === 'jelbabs')!.image },
-  { id: 'complets', image: products.find(p => p.category === 'complets')!.image },
+  { id: 'robes', image: staticProducts.find(p => p.category === 'robes')!.image },
+  { id: 'jelbabs', image: staticProducts.find(p => p.category === 'jelbabs')!.image },
+  { id: 'complets', image: staticProducts.find(p => p.category === 'complets')!.image },
 ] as const;
 
 const fadeUp = {
@@ -23,7 +24,7 @@ const fadeUp = {
 
 const Index = () => {
   const { t } = useI18n();
-  const featured = products.slice(0, 4);
+  const { featured } = useProducts();
 
   return (
     <main>
@@ -126,7 +127,7 @@ const Index = () => {
           </motion.div>
 
           <div className="grid gap-8 grid-cols-2 md:grid-cols-4">
-            {featured.map((product, i) => (
+            {featured.slice(0, 4).map((product, i) => (
               <motion.div
                 key={product.id}
                 initial="hidden"

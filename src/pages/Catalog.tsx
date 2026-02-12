@@ -1,13 +1,16 @@
 import { useSearchParams } from 'react-router-dom';
 import { useI18n } from '@/lib/i18n';
-import { products, type Category } from '@/lib/products';
+import { useProducts } from '@/hooks/useProducts';
+import type { Category } from '@/lib/products';
 import ProductCard from '@/components/ProductCard';
 import { motion } from 'framer-motion';
+import { Skeleton } from '@/components/ui/skeleton';
 
 const categoryKeys: (Category | 'all')[] = ['all', 'robes', 'jelbabs', 'complets'];
 
 const Catalog = () => {
   const { t } = useI18n();
+  const { products, isLoading } = useProducts();
   const [searchParams, setSearchParams] = useSearchParams();
   const activeCategory = (searchParams.get('category') as Category) || 'all';
 
@@ -46,21 +49,33 @@ const Catalog = () => {
         ))}
       </div>
 
-      <motion.div
-        layout
-        className="grid gap-8 grid-cols-2 md:grid-cols-3 lg:grid-cols-4"
-      >
-        {filtered.map((product, i) => (
-          <motion.div
-            key={product.id}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: i * 0.05, duration: 0.4 }}
-          >
-            <ProductCard product={product} />
-          </motion.div>
-        ))}
-      </motion.div>
+      {isLoading ? (
+        <div className="grid gap-8 grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+          {Array.from({ length: 8 }).map((_, i) => (
+            <div key={i} className="space-y-4">
+              <Skeleton className="aspect-[3/4] w-full" />
+              <Skeleton className="h-5 w-3/4" />
+              <Skeleton className="h-4 w-1/4" />
+            </div>
+          ))}
+        </div>
+      ) : (
+        <motion.div
+          layout
+          className="grid gap-8 grid-cols-2 md:grid-cols-3 lg:grid-cols-4"
+        >
+          {filtered.map((product, i) => (
+            <motion.div
+              key={product.id}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: i * 0.05, duration: 0.4 }}
+            >
+              <ProductCard product={product} />
+            </motion.div>
+          ))}
+        </motion.div>
+      )}
     </main>
   );
 };
