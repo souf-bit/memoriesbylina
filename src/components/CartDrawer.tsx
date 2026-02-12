@@ -102,15 +102,14 @@ const CartDrawer = () => {
                   {totalPrice} {t('product.price')}
                 </span>
               </div>
-              <a href={whatsappLink} target="_blank" rel="noopener noreferrer" className="block">
-                <Button
-                  size="lg"
-                  className="w-full rounded-none py-6 gap-3 text-xs uppercase tracking-[0.15em] font-sans font-medium bg-[hsl(142,70%,40%)] hover:bg-[hsl(142,70%,35%)] text-white"
-                >
-                  <MessageCircle className="h-4 w-4" />
-                  {t('product.order')}
-                </Button>
-              </a>
+              <Button
+                size="lg"
+                onClick={() => window.open(whatsappLink, '_blank')}
+                className="w-full rounded-none py-6 gap-3 text-xs uppercase tracking-[0.15em] font-sans font-medium bg-[hsl(142,70%,40%)] hover:bg-[hsl(142,70%,35%)] text-white"
+              >
+                <MessageCircle className="h-4 w-4" />
+                {t('product.order')}
+              </Button>
               <button
                 onClick={clearCart}
                 className="w-full text-xs font-sans text-muted-foreground hover:text-foreground transition-colors uppercase tracking-wider py-2"
