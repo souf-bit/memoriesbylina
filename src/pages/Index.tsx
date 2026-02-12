@@ -1,17 +1,11 @@
 import { Link } from 'react-router-dom';
 import { useI18n } from '@/lib/i18n';
 import { useProducts } from '@/hooks/useProducts';
-import { products as staticProducts } from '@/lib/products';
 import ProductCard from '@/components/ProductCard';
 import { Button } from '@/components/ui/button';
 import { motion } from 'framer-motion';
 import heroBanner from '@/assets/hero-banner.jpg';
-
-const categories = [
-  { id: 'robes', image: staticProducts.find(p => p.category === 'robes')!.image },
-  { id: 'jelbabs', image: staticProducts.find(p => p.category === 'jelbabs')!.image },
-  { id: 'complets', image: staticProducts.find(p => p.category === 'complets')!.image },
-] as const;
+import { useMemo } from 'react';
 
 const fadeUp = {
   hidden: { opacity: 0, y: 30 },
@@ -24,7 +18,15 @@ const fadeUp = {
 
 const Index = () => {
   const { t } = useI18n();
-  const { featured } = useProducts();
+  const { products, featured } = useProducts();
+
+  const categories = useMemo(() => {
+    const catIds = ['robes', 'jelbabs', 'complets'] as const;
+    return catIds.map(id => ({
+      id,
+      image: products.find(p => p.category === id)?.image || '/placeholder.svg',
+    }));
+  }, [products]);
 
   return (
     <main>
