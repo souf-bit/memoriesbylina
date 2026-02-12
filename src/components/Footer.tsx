@@ -19,13 +19,13 @@ const Footer = () => {
 
           <div>
             <h4 className="text-xs font-sans uppercase tracking-[0.2em] font-medium mb-6">{t('footer.quicklinks')}</h4>
-            <div className="flex flex-col gap-3">
+            <nav className="flex flex-col gap-3" aria-label="Footer navigation">
               <Link to="/" className="text-sm text-muted-foreground hover:text-foreground transition-colors font-light">{t('nav.home')}</Link>
               <Link to="/catalog" className="text-sm text-muted-foreground hover:text-foreground transition-colors font-light">{t('nav.catalog')}</Link>
               <Link to="/catalog?category=robes" className="text-sm text-muted-foreground hover:text-foreground transition-colors font-light">{t('nav.robes')}</Link>
               <Link to="/catalog?category=jelbabs" className="text-sm text-muted-foreground hover:text-foreground transition-colors font-light">{t('nav.jelbabs')}</Link>
               <Link to="/catalog?category=complets" className="text-sm text-muted-foreground hover:text-foreground transition-colors font-light">{t('nav.complets')}</Link>
-            </div>
+            </nav>
           </div>
 
           <div>
@@ -38,10 +38,10 @@ const Footer = () => {
                 className="flex items-center gap-3 text-sm text-muted-foreground hover:text-foreground transition-colors font-light"
               >
                 <MessageCircle className="h-4 w-4" />
-                0620198762
+                +212 620 198 762
               </a>
               <a
-                href="https://instagram.com"
+                href="https://instagram.com/elegance"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center gap-3 text-sm text-muted-foreground hover:text-foreground transition-colors font-light"
@@ -55,7 +55,7 @@ const Footer = () => {
 
         <div className="mt-14 border-t border-border/50 pt-8 text-center">
           <p className="text-[11px] font-sans uppercase tracking-[0.2em] text-muted-foreground">
-            © 2025 Élégance — {t('footer.rights')}
+            © {new Date().getFullYear()} Élégance — {t('footer.rights')}
           </p>
         </div>
       </div>

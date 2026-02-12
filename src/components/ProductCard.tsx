@@ -14,6 +14,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
   const { lang, t } = useI18n();
   const { addItem } = useCart();
   const [added, setAdded] = useState(false);
+  const displayLang = lang === 'nl' ? 'fr' : lang;
 
   const handleQuickAdd = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -32,7 +33,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
         <div className="aspect-[3/4] overflow-hidden bg-muted relative">
           <img
             src={product.image}
-            alt={product.name[lang]}
+            alt={product.name[displayLang]}
             className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
             loading="lazy"
           />
@@ -43,14 +44,14 @@ const ProductCard = ({ product }: ProductCardProps) => {
                 ? 'bg-[hsl(142,70%,40%)] text-white scale-110'
                 : 'bg-background/90 text-foreground opacity-0 group-hover:opacity-100 hover:bg-foreground hover:text-background'
             }`}
-            aria-label={lang === 'ar' ? 'أضيفي إلى السلة' : 'Ajouter au panier'}
+            aria-label={t('product.addToCart')}
           >
             <ShoppingBag className="h-4 w-4" />
           </button>
         </div>
         <div className="mt-4 space-y-1">
           <h3 className="font-serif text-lg font-semibold text-foreground tracking-wide">
-            {product.name[lang]}
+            {product.name[displayLang]}
           </h3>
           <p className="font-sans text-sm font-medium text-primary tracking-wider">
             {product.price} {t('product.price')}
