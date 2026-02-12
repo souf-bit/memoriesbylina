@@ -10,54 +10,23 @@ const AdminLogin = () => {
   const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [mode, setMode] = useState<'login' | 'signup'>('login');
   const [error, setError] = useState('');
-  const [info, setInfo] = useState('');
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
-    setInfo('');
     setLoading(true);
 
-    if (mode === 'signup') {
-      const { data, error: err } = await supabase.auth.signUp({
-        email,
-        password,
-      });
-      if (err) {
-        setLoading(false);
-        setError(err.message);
-        return;
-      }
-      // If auto-confirm is on, session is returned directly
-      if (data.session) {
-        setLoading(false);
-        navigate('/admin');
-        return;
-      }
-      // Otherwise wait a moment and try to login
-      await new Promise(r => setTimeout(r, 1000));
-      const { error: loginErr } = await supabase.auth.signInWithPassword({ email, password });
-      setLoading(false);
-      if (loginErr) {
-        setInfo('Compte créé ! Connectez-vous maintenant.');
-        setMode('login');
-      } else {
-        navigate('/admin');
-      }
+    const { error: err } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
+    setLoading(false);
+    if (err) {
+      setError(err.message);
     } else {
-      const { error: err } = await supabase.auth.signInWithPassword({
-        email,
-        password,
-      });
-      setLoading(false);
-      if (err) {
-        setError(err.message);
-      } else {
-        navigate('/admin');
-      }
+      navigate('/admin');
     }
   };
 
@@ -67,9 +36,7 @@ const AdminLogin = () => {
         <div className="text-center">
           <h1 className="font-serif text-3xl font-semibold">Admin</h1>
           <p className="text-sm text-muted-foreground mt-2 font-sans">
-            {mode === 'login'
-              ? 'Connectez-vous avec votre email et mot de passe'
-              : 'Créez votre compte administrateur'}
+            Connectez-vous avec votre email et mot de passe
           </p>
         </div>
 
@@ -114,16 +81,8 @@ const AdminLogin = () => {
             disabled={loading}
             className="w-full rounded-none py-6 text-xs uppercase tracking-[0.2em] font-sans font-medium"
           >
-            {loading ? '...' : mode === 'login' ? 'Se connecter' : 'Créer le compte'}
+            {loading ? '...' : 'Se connecter'}
           </Button>
-
-          <button
-            type="button"
-            onClick={() => { setMode(mode === 'login' ? 'signup' : 'login'); setError(''); }}
-            className="w-full text-center text-sm font-sans text-muted-foreground hover:text-foreground transition-colors"
-          >
-            {mode === 'login' ? 'Créer un compte' : 'Déjà un compte ? Se connecter'}
-          </button>
         </form>
       </div>
     </main>
