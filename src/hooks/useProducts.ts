@@ -15,8 +15,8 @@ const fetchDbProducts = async (): Promise<Product[]> => {
 
   return (data || []).map((p) => ({
     id: p.id,
-    name: { ar: p.name_ar, fr: p.name_fr },
-    description: { ar: p.description_ar, fr: p.description_fr },
+    name: { ar: p.name_ar, fr: p.name_fr, nl: (p as any).name_nl || p.name_fr },
+    description: { ar: p.description_ar, fr: p.description_fr, nl: (p as any).description_nl || p.description_fr },
     category: p.category as Category,
     price: p.price,
     sizes: p.sizes || ['S', 'M', 'L', 'XL'],

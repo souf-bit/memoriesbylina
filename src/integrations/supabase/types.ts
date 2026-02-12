@@ -20,11 +20,13 @@ export type Database = {
           created_at: string
           description_ar: string
           description_fr: string
+          description_nl: string
           id: string
           image_url: string | null
           is_featured: boolean
           name_ar: string
           name_fr: string
+          name_nl: string
           price: number
           sizes: string[]
           updated_at: string
@@ -34,11 +36,13 @@ export type Database = {
           created_at?: string
           description_ar?: string
           description_fr?: string
+          description_nl?: string
           id?: string
           image_url?: string | null
           is_featured?: boolean
           name_ar: string
           name_fr: string
+          name_nl?: string
           price: number
           sizes?: string[]
           updated_at?: string
@@ -48,11 +52,13 @@ export type Database = {
           created_at?: string
           description_ar?: string
           description_fr?: string
+          description_nl?: string
           id?: string
           image_url?: string | null
           is_featured?: boolean
           name_ar?: string
           name_fr?: string
+          name_nl?: string
           price?: number
           sizes?: string[]
           updated_at?: string
