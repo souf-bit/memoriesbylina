@@ -1,15 +1,18 @@
 import { useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { ArrowLeft, MessageCircle } from 'lucide-react';
+import { ArrowLeft, ShoppingBag, Check } from 'lucide-react';
 import { useI18n } from '@/lib/i18n';
-import { products, getWhatsAppLink } from '@/lib/products';
+import { useCart } from '@/lib/cart';
+import { products } from '@/lib/products';
 import { Button } from '@/components/ui/button';
 import { motion } from 'framer-motion';
 
 const ProductDetail = () => {
   const { id } = useParams<{ id: string }>();
   const { lang, t } = useI18n();
+  const { addItem } = useCart();
   const [selectedSize, setSelectedSize] = useState('M');
+  const [added, setAdded] = useState(false);
 
   const product = products.find((p) => p.id === id);
 
@@ -24,7 +27,11 @@ const ProductDetail = () => {
     );
   }
 
-  const whatsappLink = getWhatsAppLink(product.name[lang], selectedSize, product.price, lang);
+  const handleAddToCart = () => {
+    addItem(product, selectedSize);
+    setAdded(true);
+    setTimeout(() => setAdded(false), 1500);
+  };
 
   return (
     <main className="container py-12">
@@ -90,15 +97,27 @@ const ProductDetail = () => {
             </div>
           </div>
 
-          <a href={whatsappLink} target="_blank" rel="noopener noreferrer" className="mt-10">
-            <Button
-              size="lg"
-              className="w-full rounded-none py-7 gap-3 text-xs uppercase tracking-[0.2em] font-sans font-medium bg-[hsl(142,70%,40%)] hover:bg-[hsl(142,70%,35%)] text-white"
-            >
-              <MessageCircle className="h-4 w-4" />
-              {t('product.order')}
-            </Button>
-          </a>
+          <Button
+            size="lg"
+            onClick={handleAddToCart}
+            className={`mt-10 w-full rounded-none py-7 gap-3 text-xs uppercase tracking-[0.2em] font-sans font-medium transition-all duration-300 ${
+              added
+                ? 'bg-[hsl(142,70%,40%)] hover:bg-[hsl(142,70%,35%)] text-white'
+                : 'bg-foreground text-background hover:bg-foreground/90'
+            }`}
+          >
+            {added ? (
+              <>
+                <Check className="h-4 w-4" />
+                {lang === 'ar' ? 'تمت الإضافة!' : 'Ajouté !'}
+              </>
+            ) : (
+              <>
+                <ShoppingBag className="h-4 w-4" />
+                {lang === 'ar' ? 'أضيفي إلى السلة' : 'Ajouter au panier'}
+              </>
+            )}
+          </Button>
         </motion.div>
       </div>
     </main>

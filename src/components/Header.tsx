@@ -1,12 +1,14 @@
 import { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Menu, Globe } from 'lucide-react';
+import { Menu, Globe, ShoppingBag } from 'lucide-react';
 import { useI18n } from '@/lib/i18n';
+import { useCart } from '@/lib/cart';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger, SheetTitle } from '@/components/ui/sheet';
 
 const Header = () => {
   const { lang, setLang, t } = useI18n();
+  const { totalItems, setIsOpen } = useCart();
   const location = useLocation();
   const [open, setOpen] = useState(false);
 
@@ -56,6 +58,21 @@ const Header = () => {
           >
             <Globe className="h-3.5 w-3.5" />
             {lang === 'ar' ? 'FR' : 'عربي'}
+          </Button>
+
+          {/* Cart button */}
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => setIsOpen(true)}
+            className="relative"
+          >
+            <ShoppingBag className="h-5 w-5" />
+            {totalItems > 0 && (
+              <span className="absolute -top-1 -end-1 bg-primary text-primary-foreground text-[10px] font-sans font-bold rounded-full h-5 w-5 flex items-center justify-center">
+                {totalItems}
+              </span>
+            )}
           </Button>
 
           {/* Mobile menu */}
