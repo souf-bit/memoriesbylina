@@ -12,11 +12,12 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/u
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet';
 import {
   Plus, Pencil, Trash2, LogOut, Upload, Image as ImageIcon, AlertTriangle,
-  Package, Star, Grid3X3, TrendingUp, Eye, ShoppingBag
+  Package, Star, Grid3X3, TrendingUp, Eye, ShoppingBag, Layers
 } from 'lucide-react';
 import { toast } from '@/hooks/use-toast';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
+import { useCategories, type DbCategory } from '@/hooks/useCategories';
 
 interface DbProduct {
   id: string;
@@ -32,6 +33,7 @@ interface DbProduct {
   image_url: string | null;
   is_featured: boolean;
   created_at: string;
+  stock_qty: number;
 }
 
 const emptyForm = {
@@ -45,6 +47,7 @@ const emptyForm = {
   price: 0,
   sizes: ['S', 'M', 'L', 'XL'],
   is_featured: false,
+  stock_qty: 0,
 };
 
 const GOLD = '#C9A050';
@@ -68,7 +71,7 @@ const AdminDashboard = () => {
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
-  const [activeTab, setActiveTab] = useState<'overview' | 'products'>('overview');
+  const [activeTab, setActiveTab] = useState<'overview' | 'products' | 'categories'>('overview');
 
   useEffect(() => {
     if (!loading && (!user || !isAdmin)) {
@@ -92,17 +95,26 @@ const AdminDashboard = () => {
     queryClient.invalidateQueries({ queryKey: ['products'] });
   };
 
+  // Categories
+  const { categories: dbCategories, addCategory, updateCategory, deleteCategory } = useCategories();
+  const [catFormOpen, setCatFormOpen] = useState(false);
+  const [editCatId, setEditCatId] = useState<string | null>(null);
+  const [catForm, setCatForm] = useState({ name_nl: '', name_fr: '', name_ar: '', slug: '' });
+  const [deleteCatConfirmId, setDeleteCatConfirmId] = useState<string | null>(null);
+
   // Stats
   const stats = useMemo(() => {
     const totalProducts = products.length;
     const featured = products.filter(p => p.is_featured).length;
     const avgPrice = totalProducts > 0 ? Math.round(products.reduce((s, p) => s + p.price, 0) / totalProducts) : 0;
+    const outOfStock = products.filter(p => (p.stock_qty ?? 0) === 0).length;
+    const lowStock = products.filter(p => (p.stock_qty ?? 0) > 0 && (p.stock_qty ?? 0) <= 10).length;
     const categories = {
       robes: products.filter(p => p.category === 'robes').length,
       jelbabs: products.filter(p => p.category === 'jelbabs').length,
       complets: products.filter(p => p.category === 'complets').length,
     };
-    return { totalProducts, featured, avgPrice, categories };
+    return { totalProducts, featured, avgPrice, categories, outOfStock, lowStock };
   }, [products]);
 
   const categoryData = [
@@ -168,6 +180,7 @@ const AdminDashboard = () => {
       price: product.price,
       sizes: product.sizes,
       is_featured: product.is_featured,
+      stock_qty: product.stock_qty ?? 0,
     });
     setImagePreview(product.image_url);
     setImageFile(null);
@@ -192,6 +205,7 @@ const AdminDashboard = () => {
         name_ar: form.name_ar, name_fr: form.name_fr, name_nl: form.name_nl,
         description_ar: form.description_ar, description_fr: form.description_fr, description_nl: form.description_nl,
         category: form.category, price: form.price, sizes: form.sizes, is_featured: form.is_featured, image_url: imageUrl,
+        stock_qty: form.stock_qty,
       };
       if (editId) {
         const { error } = await supabase.from('products').update(payload).eq('id', editId);
@@ -308,7 +322,7 @@ const AdminDashboard = () => {
         </div>
       ))}
 
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-4 gap-4">
         <div className="space-y-2">
           <Label className="text-xs font-sans uppercase tracking-wider" style={{ color: DARK_MUTED }}>Categorie</Label>
           <Select value={form.category} onValueChange={(v) => setForm(f => ({ ...f, category: v as any }))}>
@@ -316,9 +330,9 @@ const AdminDashboard = () => {
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="robes">Jurken / Robes</SelectItem>
-              <SelectItem value="jelbabs">Jelbabs</SelectItem>
-              <SelectItem value="complets">Complets</SelectItem>
+              {dbCategories.map(cat => (
+                <SelectItem key={cat.id} value={cat.slug}>{cat.name_nl} / {cat.name_fr}</SelectItem>
+              ))}
             </SelectContent>
           </Select>
         </div>
@@ -340,6 +354,18 @@ const AdminDashboard = () => {
             value={form.sizes.join(', ')}
             onChange={(e) => handleSizesChange(e.target.value)}
             placeholder="S, M, L, XL"
+            className="rounded border-0"
+            style={{ background: DARK_BORDER, color: 'white' }}
+          />
+        </div>
+        <div className="space-y-2">
+          <Label className="text-xs font-sans uppercase tracking-wider" style={{ color: DARK_MUTED }}>Voorraad</Label>
+          <Input
+            type="number"
+            value={form.stock_qty}
+            onChange={(e) => setForm(f => ({ ...f, stock_qty: Number(e.target.value) }))}
+            required
+            min={0}
             className="rounded border-0"
             style={{ background: DARK_BORDER, color: 'white' }}
           />
@@ -403,6 +429,7 @@ const AdminDashboard = () => {
         {[
           { id: 'overview' as const, label: 'Overzicht', icon: Eye },
           { id: 'products' as const, label: 'Producten', icon: Package },
+          { id: 'categories' as const, label: 'Categorieën', icon: Layers },
         ].map(tab => (
           <button
             key={tab.id}
@@ -424,11 +451,12 @@ const AdminDashboard = () => {
         {activeTab === 'overview' && (
           <div className="space-y-6">
             {/* Stats grid */}
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+            <div className="grid grid-cols-2 lg:grid-cols-5 gap-4">
               <StatCard icon={Package} label="Producten" value={stats.totalProducts} sub="Totale catalogus" />
               <StatCard icon={Star} label="Uitgelicht" value={stats.featured} sub="Gemarkeerd als featured" />
               <StatCard icon={TrendingUp} label="Gem. Prijs" value={`${stats.avgPrice} DH`} sub="Gemiddelde productprijs" />
-              <StatCard icon={Grid3X3} label="Categorieën" value={3} sub="Robes, Jelbabs, Complets" />
+              <StatCard icon={Grid3X3} label="Categorieën" value={dbCategories.length} sub={dbCategories.map(c => c.name_nl).join(', ')} />
+              <StatCard icon={AlertTriangle} label="Voorraad" value={`${stats.outOfStock} uitverkocht`} sub={`${stats.lowStock} laag (≤10)`} />
             </div>
 
             {/* Charts */}
@@ -564,6 +592,9 @@ const AdminDashboard = () => {
                     <h3 className="font-medium text-sm truncate">{p.name_nl || p.name_fr}</h3>
                     <p className="text-xs capitalize mt-0.5" style={{ color: DARK_MUTED }}>{p.category}</p>
                     <p className="text-sm font-medium mt-1" style={{ color: GOLD }}>{p.price} DH</p>
+                    <p className="text-xs mt-0.5" style={{ color: (p.stock_qty ?? 0) === 0 ? '#ef4444' : (p.stock_qty ?? 0) <= 10 ? '#f59e0b' : '#22c55e' }}>
+                      Voorraad: {p.stock_qty ?? 0}
+                    </p>
                     <p className="text-xs mt-0.5" style={{ color: DARK_MUTED }}>{p.sizes.join(', ')}</p>
                   </div>
                   <div className="flex flex-col gap-1 flex-shrink-0">
@@ -584,7 +615,7 @@ const AdminDashboard = () => {
                 <table className="w-full text-sm font-sans">
                   <thead>
                     <tr style={{ background: `${DARK_BORDER}80` }}>
-                      {['Foto', 'Naam', 'Categorie', 'Prijs', 'Maten', 'Status', 'Acties'].map(h => (
+                      {['Foto', 'Naam', 'Categorie', 'Prijs', 'Voorraad', 'Maten', 'Status', 'Acties'].map(h => (
                         <th key={h} className={`px-4 py-3 text-xs uppercase tracking-wider font-medium ${h === 'Acties' ? 'text-end' : 'text-start'}`} style={{ color: DARK_MUTED }}>
                           {h}
                         </th>
@@ -593,7 +624,7 @@ const AdminDashboard = () => {
                   </thead>
                   <tbody>
                     {products.length === 0 && (
-                      <tr><td colSpan={7} className="text-center py-12" style={{ color: DARK_MUTED }}>Geen producten</td></tr>
+                      <tr><td colSpan={8} className="text-center py-12" style={{ color: DARK_MUTED }}>Geen producten</td></tr>
                     )}
                     {products.map(p => (
                       <tr key={p.id} className="border-t transition-colors hover:bg-white/[0.02]" style={{ borderColor: DARK_BORDER }}>
@@ -609,6 +640,14 @@ const AdminDashboard = () => {
                         <td className="px-4 py-3 font-medium">{p.name_nl || p.name_fr}</td>
                         <td className="px-4 py-3 capitalize">{p.category}</td>
                         <td className="px-4 py-3" style={{ color: GOLD }}>{p.price} DH</td>
+                        <td className="px-4 py-3">
+                          <span className="text-xs font-medium px-2 py-0.5 rounded-full" style={{
+                            background: (p.stock_qty ?? 0) === 0 ? '#ef444420' : (p.stock_qty ?? 0) <= 10 ? '#f59e0b20' : '#22c55e20',
+                            color: (p.stock_qty ?? 0) === 0 ? '#ef4444' : (p.stock_qty ?? 0) <= 10 ? '#f59e0b' : '#22c55e',
+                          }}>
+                            {p.stock_qty ?? 0}
+                          </span>
+                        </td>
                         <td className="px-4 py-3" style={{ color: DARK_MUTED }}>{p.sizes.join(', ')}</td>
                         <td className="px-4 py-3">
                           {p.is_featured && (
@@ -632,6 +671,65 @@ const AdminDashboard = () => {
                   </tbody>
                 </table>
               </div>
+            </div>
+          </div>
+        )}
+
+        {/* === CATEGORIES TAB === */}
+        {activeTab === 'categories' && (
+          <div className="space-y-4">
+            <div className="flex items-center justify-between">
+              <h2 className="font-serif text-xl font-semibold" style={{ color: GOLD }}>Categorieën beheer</h2>
+              <Button
+                onClick={() => {
+                  setEditCatId(null);
+                  setCatForm({ name_nl: '', name_fr: '', name_ar: '', slug: '' });
+                  setCatFormOpen(true);
+                }}
+                className="gap-2 text-xs uppercase tracking-wider font-sans rounded"
+                style={{ background: GOLD, color: DARK_BG }}
+              >
+                <Plus className="h-4 w-4" /> Nieuwe categorie
+              </Button>
+            </div>
+
+            <div className="space-y-3">
+              {dbCategories.length === 0 && (
+                <p className="text-center py-12" style={{ color: DARK_MUTED }}>Geen categorieën</p>
+              )}
+              {dbCategories.map(cat => {
+                const productCount = products.filter(p => p.category === cat.slug).length;
+                return (
+                  <div key={cat.id} className="p-4 rounded-lg border flex items-center gap-4" style={{ background: DARK_CARD, borderColor: DARK_BORDER }}>
+                    <div className="flex-1 min-w-0">
+                      <h3 className="font-medium text-sm">{cat.name_nl}</h3>
+                      <p className="text-xs mt-0.5" style={{ color: DARK_MUTED }}>
+                        FR: {cat.name_fr} · AR: {cat.name_ar} · Slug: {cat.slug}
+                      </p>
+                      <p className="text-xs mt-1" style={{ color: GOLD }}>{productCount} product(en)</p>
+                    </div>
+                    <div className="flex gap-1 flex-shrink-0">
+                      <Button variant="ghost" size="icon" className="h-8 w-8 hover:bg-white/5" onClick={() => {
+                        setEditCatId(cat.id);
+                        setCatForm({ name_nl: cat.name_nl, name_fr: cat.name_fr, name_ar: cat.name_ar, slug: cat.slug });
+                        setCatFormOpen(true);
+                      }}>
+                        <Pencil className="h-3.5 w-3.5" style={{ color: GOLD }} />
+                      </Button>
+                      <Button variant="ghost" size="icon" className="h-8 w-8 hover:bg-white/5" onClick={() => {
+                        const count = products.filter(p => p.category === cat.slug).length;
+                        if (count > 0) {
+                          toast({ title: 'Kan niet verwijderen', description: `Er zijn nog ${count} product(en) gekoppeld aan deze categorie.`, variant: 'destructive' });
+                          return;
+                        }
+                        setDeleteCatConfirmId(cat.id);
+                      }}>
+                        <Trash2 className="h-3.5 w-3.5 text-red-400" />
+                      </Button>
+                    </div>
+                  </div>
+                );
+              })}
             </div>
           </div>
         )}
@@ -684,6 +782,91 @@ const AdminDashboard = () => {
           </DialogContent>
         </Dialog>
       )}
+
+      {/* Category form dialog */}
+      <Dialog open={catFormOpen} onOpenChange={setCatFormOpen}>
+        <DialogContent className="max-w-md border-0" style={{ background: DARK_CARD, color: 'white' }}>
+          <DialogHeader>
+            <DialogTitle className="font-serif text-xl" style={{ color: GOLD }}>
+              {editCatId ? 'Categorie bewerken' : 'Nieuwe categorie'}
+            </DialogTitle>
+          </DialogHeader>
+          <form onSubmit={async (e) => {
+            e.preventDefault();
+            try {
+              if (editCatId) {
+                await updateCategory.mutateAsync({ id: editCatId, ...catForm });
+                toast({ title: 'Categorie bijgewerkt ✓' });
+              } else {
+                await addCategory.mutateAsync(catForm);
+                toast({ title: 'Categorie toegevoegd ✓' });
+              }
+              setCatFormOpen(false);
+            } catch (err: any) {
+              toast({ title: 'Fout', description: err.message, variant: 'destructive' });
+            }
+          }} className="space-y-4 mt-4">
+            {[
+              { key: 'name_nl', label: 'Naam (NL)' },
+              { key: 'name_fr', label: 'Naam (FR)' },
+              { key: 'name_ar', label: 'Naam (AR)', dir: 'rtl' as const },
+              { key: 'slug', label: 'Slug' },
+            ].map(f => (
+              <div key={f.key} className="space-y-2">
+                <Label className="text-xs font-sans uppercase tracking-wider" style={{ color: DARK_MUTED }}>{f.label}</Label>
+                <Input
+                  value={(catForm as any)[f.key]}
+                  onChange={(e) => setCatForm(prev => ({ ...prev, [f.key]: e.target.value }))}
+                  dir={(f as any).dir}
+                  required
+                  className="rounded border-0"
+                  style={{ background: DARK_BORDER, color: 'white' }}
+                />
+              </div>
+            ))}
+            <Button
+              type="submit"
+              disabled={addCategory.isPending || updateCategory.isPending}
+              className="w-full rounded py-5 text-xs uppercase tracking-[0.15em] font-sans font-medium border-0"
+              style={{ background: GOLD, color: DARK_BG }}
+            >
+              {addCategory.isPending || updateCategory.isPending ? 'Opslaan...' : editCatId ? 'Bijwerken' : 'Toevoegen'}
+            </Button>
+          </form>
+        </DialogContent>
+      </Dialog>
+
+      {/* Delete category confirmation */}
+      <Dialog open={!!deleteCatConfirmId} onOpenChange={(open) => !open && setDeleteCatConfirmId(null)}>
+        <DialogContent className="max-w-sm border-0" style={{ background: DARK_CARD, color: 'white' }}>
+          <DialogHeader>
+            <DialogTitle className="font-serif text-xl flex items-center gap-2">
+              <AlertTriangle className="h-5 w-5 text-red-400" />
+              Categorie verwijderen?
+            </DialogTitle>
+          </DialogHeader>
+          <p className="text-sm" style={{ color: DARK_MUTED }}>
+            Dit kan niet ongedaan worden gemaakt.
+          </p>
+          <div className="flex gap-2 mt-4">
+            <Button variant="outline" className="flex-1 rounded border" onClick={() => setDeleteCatConfirmId(null)} style={{ borderColor: DARK_BORDER, color: 'white', background: 'transparent' }}>
+              Annuleren
+            </Button>
+            <Button className="flex-1 rounded bg-red-600 hover:bg-red-700 text-white border-0" onClick={async () => {
+              if (!deleteCatConfirmId) return;
+              try {
+                await deleteCategory.mutateAsync(deleteCatConfirmId);
+                toast({ title: 'Categorie verwijderd ✓' });
+              } catch (err: any) {
+                toast({ title: 'Fout', description: err.message, variant: 'destructive' });
+              }
+              setDeleteCatConfirmId(null);
+            }}>
+              Verwijderen
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };

@@ -22,6 +22,7 @@ const fetchProducts = async (): Promise<Product[]> => {
     sizes: p.sizes || ['S', 'M', 'L', 'XL'],
     image: p.image_url || '/placeholder.svg',
     isFeatured: p.is_featured,
+    stockQty: (p as any).stock_qty ?? 0,
   }));
 };
 

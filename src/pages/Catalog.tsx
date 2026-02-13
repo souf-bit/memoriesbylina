@@ -70,7 +70,13 @@ const Catalog = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: i * 0.05, duration: 0.4 }}
+              className="relative"
             >
+              {product.stockQty === 0 && (
+                <div className="absolute top-3 left-3 z-10 bg-destructive text-destructive-foreground text-[10px] font-sans uppercase tracking-wider px-2 py-1 rounded-sm">
+                  {t('product.soldOut')}
+                </div>
+              )}
               <ProductCard product={product} />
             </motion.div>
           ))}

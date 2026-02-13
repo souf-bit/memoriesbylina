@@ -46,7 +46,10 @@ const ProductDetail = () => {
     );
   }
 
+  const isSoldOut = product.stockQty === 0;
+
   const handleAddToCart = () => {
+    if (isSoldOut) return;
     addItem(product, selectedSize);
     setAdded(true);
     setTimeout(() => setAdded(false), 1500);
@@ -116,27 +119,33 @@ const ProductDetail = () => {
             </div>
           </div>
 
-          <Button
-            size="lg"
-            onClick={handleAddToCart}
-            className={`mt-10 w-full rounded-none py-7 gap-3 text-xs uppercase tracking-[0.2em] font-sans font-medium transition-all duration-300 ${
-              added
-                ? 'bg-[hsl(142,70%,40%)] hover:bg-[hsl(142,70%,35%)] text-white'
-                : 'bg-foreground text-background hover:bg-foreground/90'
-            }`}
-          >
-            {added ? (
-              <>
-                <Check className="h-4 w-4" />
-                {t('product.added')}
-              </>
-            ) : (
-              <>
-                <ShoppingBag className="h-4 w-4" />
-                {t('product.addToCart')}
-              </>
-            )}
-          </Button>
+          {isSoldOut ? (
+            <div className="mt-10 w-full py-7 flex items-center justify-center gap-3 text-xs uppercase tracking-[0.2em] font-sans font-medium bg-muted text-muted-foreground">
+              {t('product.soldOut')}
+            </div>
+          ) : (
+            <Button
+              size="lg"
+              onClick={handleAddToCart}
+              className={`mt-10 w-full rounded-none py-7 gap-3 text-xs uppercase tracking-[0.2em] font-sans font-medium transition-all duration-300 ${
+                added
+                  ? 'bg-[hsl(142,70%,40%)] hover:bg-[hsl(142,70%,35%)] text-white'
+                  : 'bg-foreground text-background hover:bg-foreground/90'
+              }`}
+            >
+              {added ? (
+                <>
+                  <Check className="h-4 w-4" />
+                  {t('product.added')}
+                </>
+              ) : (
+                <>
+                  <ShoppingBag className="h-4 w-4" />
+                  {t('product.addToCart')}
+                </>
+              )}
+            </Button>
+          )}
         </motion.div>
       </div>
     </main>
