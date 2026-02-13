@@ -14,6 +14,33 @@ export type Database = {
   }
   public: {
     Tables: {
+      categories: {
+        Row: {
+          created_at: string
+          id: string
+          name_ar: string
+          name_fr: string
+          name_nl: string
+          slug: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          name_ar: string
+          name_fr: string
+          name_nl: string
+          slug: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          name_ar?: string
+          name_fr?: string
+          name_nl?: string
+          slug?: string
+        }
+        Relationships: []
+      }
       products: {
         Row: {
           category: Database["public"]["Enums"]["product_category"]
@@ -29,6 +56,7 @@ export type Database = {
           name_nl: string
           price: number
           sizes: string[]
+          stock_qty: number
           updated_at: string
         }
         Insert: {
@@ -45,6 +73,7 @@ export type Database = {
           name_nl?: string
           price: number
           sizes?: string[]
+          stock_qty?: number
           updated_at?: string
         }
         Update: {
@@ -61,6 +90,7 @@ export type Database = {
           name_nl?: string
           price?: number
           sizes?: string[]
+          stock_qty?: number
           updated_at?: string
         }
         Relationships: []

@@ -9,6 +9,7 @@ export interface Product {
   sizes: string[];
   image: string;
   isFeatured?: boolean;
+  stockQty: number;
 }
 
 export const WHATSAPP_NUMBER = '212620198762';
